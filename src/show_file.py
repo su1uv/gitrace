@@ -1,9 +1,10 @@
-import _io
 import subprocess
 
 
-def show_file(git_path_abs: str, work_dir: str, file_path: str, commit_id: str):
-    ps: subprocess.Popen[bytes] = subprocess.Popen(
+def get_file_content(
+    git_path_abs: str, work_dir: str, file_path: str, commit_id: str
+) -> str:
+    ps: subprocess.CompletedProcess = subprocess.run(
         (
             git_path_abs,
             "-C",
@@ -11,10 +12,8 @@ def show_file(git_path_abs: str, work_dir: str, file_path: str, commit_id: str):
             "show",
             f"{commit_id}:{file_path}",
         ),
-        stdout=subprocess.PIPE,
+        capture_output=True,
+        text=True,
     )
 
-    if isinstance(ps.stdout, _io.BufferedReader):
-        output = subprocess.run(["bat", "-l", "python"], stdin=ps.stdout)
-
-    ps.wait()
+    return ps.stdout
