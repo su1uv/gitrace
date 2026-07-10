@@ -1,6 +1,7 @@
 import os
 
 from dotenv import load_dotenv
+from prompt_toolkit import choice, prompt
 
 from src.get_commits import get_commits
 
@@ -12,9 +13,15 @@ def main():
     if work_dir is None:
         work_dir = ""
 
-    commits: dict[str, tuple[str, str, str]] = get_commits(work_dir, "src/main.py")
-    for commit in commits.values():
-        print(commit)
+    file: str = prompt("Insert the file path: ")
+
+    commits: dict[str, tuple[str, str, str]] = get_commits(work_dir, file)
+    options: list[tuple[str, str]] = []
+    for commit in commits:
+        options.append((commit, commits[commit][2]))
+
+    result = choice(message=f"select a commit of {file}", options=options)
+    print(result)
 
 
 if __name__ == "__main__":

@@ -2,17 +2,19 @@ import subprocess
 
 
 def get_commits(work_dir: str, file_path: str) -> dict[str, tuple[str, str, str]]:
+    commits_dict: dict[str, tuple[str, str, str]] = {}
+
     get_commits: subprocess.CompletedProcess = subprocess.run(
         ("git", "-C", work_dir, "log", "--follow", file_path),
         capture_output=True,
         text=True,
     )
-    commits_list: list[str] = []
     if isinstance(get_commits.stdout, str):
-        commits_list = get_commits.stdout.replace("\n\n", "\n").split("commit ")
+        commits_list: list[str] = get_commits.stdout.replace("\n\n", "\n").split(
+            "commit "
+        )
     else:
-        exit(1)
-    commits_dict: dict[str, tuple[str, str, str]] = {}
+        return commits_dict
 
     for commit in commits_list:
         if commit == "":
