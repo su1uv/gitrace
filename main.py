@@ -30,9 +30,7 @@ def main():
     for commit in commits:
         options.append((commit, commits[commit][2]))
 
-    content = "hola"
-    # content: str = get_file_content("git", work_dir, file, result)
-    app(content, options)
+    app(work_dir, file, options)
 
 
 if __name__ == "__main__":
