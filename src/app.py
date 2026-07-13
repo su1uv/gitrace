@@ -5,7 +5,6 @@ from prompt_toolkit.key_binding import KeyBindings
 from prompt_toolkit.layout.containers import HSplit, Window
 from prompt_toolkit.layout.controls import FormattedTextControl
 from prompt_toolkit.layout.layout import Layout
-from prompt_toolkit.lexers.pygments import PygmentsLexer
 from prompt_toolkit.styles import Style
 from prompt_toolkit.styles.pygments import style_from_pygments_cls
 from prompt_toolkit.widgets import (
@@ -15,6 +14,7 @@ from prompt_toolkit.widgets import (
 from pygments.lexers.python import PythonLexer
 from pygments.styles import get_style_by_name
 
+from .get_commits import get_commits
 from .show_file import get_file_content
 
 kb = KeyBindings()
@@ -25,9 +25,9 @@ def exit_(event):
     event.app.exit()
 
 
-def app(work_dir, file_path, commits):
+def app(work_dir, file_path):
     style: Style = style_from_pygments_cls(get_style_by_name("one-dark"))
-    commit_list = RadioList(values=commits)
+    commit_list = RadioList(values=get_commits(work_dir, file_path))
 
     def get_commit_content() -> PygmentsTokens:
         commit_id = commit_list.current_value
